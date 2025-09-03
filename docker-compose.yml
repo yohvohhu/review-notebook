@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  backend:
+    build: ./backend
+    environment:
+      - DATABASE_URL=sqlite:///./app.db
+      - JWT_SECRET=changeme
+    volumes:
+      - backend-data:/code
+  frontend:
+    build: ./frontend
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - backend
+      - frontend
+volumes:
+  backend-data:
